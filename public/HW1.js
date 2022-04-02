@@ -200,7 +200,6 @@ function drawText(txt, x, y) {
     ctx.fillStyle = rgbaColor;
     font_size = document.getElementById("text_size").value;
     font = String(font_size) + "px " + font_name;
-    console.log(font)
     ctx.font = font;
     ctx.fillText(txt, x - 4, y - 4);
     cPush();
@@ -245,9 +244,7 @@ function drawToCanvas(imgData) {
 
 ///////////////////////////////////////////////////////
 function download() {
-    console.log("download")
     let imgSrc = canvas.toDataURL();
-    console.log(imgSrc)
     let imgName = 'test.jpg';
     downloadImg(imgSrc, imgName);
     mode = "download"
