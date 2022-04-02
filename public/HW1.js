@@ -224,10 +224,9 @@ function doInput() {
 }
 
 function readFile() {
-    var file = this.files[0];//獲取input輸入的圖片
-    console.log(file)
+    var file = this.files[0];
     var reader = new FileReader();
-    reader.readAsDataURL(file);//轉化成base64資料型別
+    reader.readAsDataURL(file);
     reader.onload = function (e) {
         drawToCanvas(this.result);
     }
@@ -236,7 +235,7 @@ function readFile() {
 function drawToCanvas(imgData) {
     var img = new Image;
     img.src = imgData;
-    img.onload = function () {//必須onload之後再畫
+    img.onload = function () {
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
     }
     mode = "upload"
