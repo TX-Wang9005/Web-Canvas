@@ -23,7 +23,10 @@
     <div class=" column left">
         <canvas id="art" width="800" height="500"></canvas><br>
         <input type="text" class="text_size" value="Normal" id="mode"
-            style="float:left; width: 200px; border-radius: 0%;" readonly>
+            style="float:left; width: 200px; border-radius: 0%;" readonly><br><br>
+        <button class="bi bi-github btn" style="float: left;"
+            onclick="window.open('https://github.com/TX-Wang9005/Web-Canvas')"></button>
+
     </div>
     <div class=" column right">
         <div class="column" style="width:100%;">
@@ -80,6 +83,12 @@
                 <td><button class="bi bi-arrow-right-square btn" id="redo" onclick="redo()">
                 </td>
                 <td><button class="bi bi-arrow-repeat btn" id="reset" onclick="Reset()"></td>
+            </tr>
+            <tr class="row">
+                <td><button class="bi bi-scissors btn" id="cut" onclick="switchMode(this)"></td>
+                <td><button class="bi bi-file-earmark btn" id="copy" onclick="switchMode(this)">
+                </td>
+                <td><button class="bi bi-clipboard2 btn" id="paste" onclick="switchMode(this)"></td>
             </tr>
         </table>
     </div>

@@ -17,8 +17,12 @@ var height2;
 var colorLabel;
 var drag = false;
 var rgbaColor = 'rgba(0,0,0,1)';
+var curImage;
 var colorBlockImage;
 var colorPickImage;
+var cutImage;
+var cutImage_width;
+var cutImage_height;
 
 
 function init() {
@@ -152,6 +156,15 @@ function switchMode(button) {
     else if (mode === "line") {
         canvas.style.cursor = "url('Image/slash-lg.svg'), auto";
     }
+    else if (mode === "cut") {
+        canvas.style.cursor = "url('Image/scissors.svg'), auto";
+    }
+    else if (mode === "copy") {
+        canvas.style.cursor = "url('Image/file-earmark.svg'), auto";
+    }
+    else if (mode === "paste") {
+        canvas.style.cursor = "url('Image/clipboard2.svg'), auto";
+    }
     else {
         canvas.style.cursor = "crosshair";
     }
@@ -212,7 +225,7 @@ function doInput() {
 
 function readFile() {
     var file = this.files[0];//獲取input輸入的圖片
-    console.log(file.type)
+    console.log(file)
     var reader = new FileReader();
     reader.readAsDataURL(file);//轉化成base64資料型別
     reader.onload = function (e) {
@@ -330,6 +343,29 @@ function mouseDownEvent(evt) {
         y = mousePos.y;
         canvas.addEventListener('mousemove', mouseMove, false);
     }
+    else if (mode === "cut" || mode === "copy") {
+        isDrawing = true;
+        ctx.lineWidth = 2
+        ctx.lineCap = 'round'
+        ctx.lineJoin = 'round'
+        ctx.globalCompositeOperation = "source-over";
+        ctx.strokeStyle = "black";
+        curImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        evt.preventDefault();
+        x = mousePos.x;
+        y = mousePos.y;
+        canvas.addEventListener('mousemove', mouseMove, false);
+    }
+    else if (mode === "paste") {
+        x = mousePos.x;
+        y = mousePos.y;
+        if (cutImage == undefined) {
+            alert("No copy image")
+            return
+        }
+        ctx.putImageData(cutImage, x - cutImage_width / 2, y - cutImage_height / 2);
+        cPush();
+    }
 }
 
 ////////////////////////////////////////////////////////
@@ -386,12 +422,38 @@ function mouseMove(evt) {
             ctx.stroke();
         }
     }
+    else if (mode === "cut" || mode === "copy") {
+        if (isDrawing) {
+            var mousePos = getMousePos(canvas, evt);
+            ctx.setLineDash([6]);
+            ctx.putImageData(curImage, 0, 0);
+            ctx.strokeRect(x, y, mousePos.x - x, mousePos.y - y);
+        }
+    }
 };
 
-function mouseUpEvent() {
+function mouseUpEvent(evt) {
     if (mode === "brush" || mode === "eraser" || mode === "line" || mode === "rectangle" || mode === "circle" || mode === "triangle") {
         isDrawing = false;
         cPush();
+    }
+    else if (mode === "cut") {
+        isDrawing = false;
+        var mousePos = getMousePos(canvas, evt);
+        cutImage_width = mousePos.x - x - 2;
+        cutImage_height = mousePos.y - y - 2;
+        cutImage = ctx.getImageData(x + 1, y + 1, cutImage_width, cutImage_height);
+        ctx.putImageData(curImage, 0, 0);
+        ctx.clearRect(x, y, mousePos.x - x, mousePos.y - y);
+        cPush();
+    }
+    else if (mode === "copy") {
+        isDrawing = false;
+        var mousePos = getMousePos(canvas, evt);
+        cutImage_width = mousePos.x - x - 2;
+        cutImage_height = mousePos.y - y - 2;
+        cutImage = ctx.getImageData(x + 1, y + 1, cutImage_width, cutImage_height);
+        ctx.putImageData(curImage, 0, 0);
     }
 }
 
