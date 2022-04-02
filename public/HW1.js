@@ -446,6 +446,7 @@ function mouseUpEvent(evt) {
         ctx.putImageData(curImage, 0, 0);
         ctx.clearRect(x, y, mousePos.x - x, mousePos.y - y);
         cPush();
+        ctx.setLineDash([0]);
     }
     else if (mode === "copy") {
         isDrawing = false;
@@ -454,6 +455,7 @@ function mouseUpEvent(evt) {
         cutImage_height = mousePos.y - y - 2;
         cutImage = ctx.getImageData(x + 1, y + 1, cutImage_width, cutImage_height);
         ctx.putImageData(curImage, 0, 0);
+        ctx.setLineDash([0]);
     }
 }
 
